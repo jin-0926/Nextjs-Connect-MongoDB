@@ -6,3 +6,5 @@ develop 에서 수정 main으로 merge
 git flow 기법
 
 feat(새기능) fix(고치기) refact
+
+홈페이지엔 상품 정보만
