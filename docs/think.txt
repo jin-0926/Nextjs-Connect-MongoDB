@@ -1,0 +1,8 @@
+브랜치
+코드수정단계에서 수정하기위해서 
+실시간 서비스에서 자애가 발생하면 안되니까
+develop 에서 수정 main으로 merge
+
+git flow 기법
+
+feat(새기능) fix(고치기) refact
