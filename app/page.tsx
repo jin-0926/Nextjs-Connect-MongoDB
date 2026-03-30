@@ -1,80 +1,209 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
+import styled from 'styled-components'
 
 export default function Home() {
-  return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm sm:text-left">
-          <li className="mb-2">
-            Get started by editing{' '}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold dark:bg-white/[.06]">app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent bg-foreground px-4 text-sm text-background transition-colors hover:bg-[#383838] sm:h-12 sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] sm:h-12 sm:min-w-44 sm:px-5 sm:text-base dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="https://nextjs.org/icons/file.svg" alt="File icon" width={16} height={16} />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="https://nextjs.org/icons/window.svg" alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="https://nextjs.org/icons/globe.svg" alt="Globe icon" width={16} height={16} />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  useEffect(() => {
+    // Check for login state in localStorage
+    const user = localStorage.getItem('user')
+    if (user) {
+      setIsLoggedIn(true)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('user')
+    setIsLoggedIn(false)
+    alert('로그아웃 되었습니다.')
+  }
+
+  return (
+    <Container>
+      <Header>
+        <Logo>
+          <Image
+            src="https://nextjs.org/icons/next.svg"
+            alt="Next.js logo"
+            width={120}
+            height={30}
+            priority
+          />
+        </Logo>
+        <Nav>
+          {isLoggedIn ? (
+            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+          ) : (
+            <Link href="/auth?type=login" passHref>
+              <LoginButton>로그인</LoginButton>
+            </Link>
+          )}
+        </Nav>
+      </Header>
+
+      <Main>
+        <HeroSection>
+          <Title>Welcome to My Store</Title>
+          <Subtitle>발견하고, 탐험하고, 쇼핑하세요.</Subtitle>
+          <ProductGrid>
+            {/* 상품 정보가 들어갈 자리 */}
+            <ProductCard>
+              <ProductImagePlaceholder />
+              <ProductName>프리미엄 슈즈</ProductName>
+              <ProductPrice>₩129,000</ProductPrice>
+            </ProductCard>
+            <ProductCard>
+              <ProductImagePlaceholder />
+              <ProductName>모던 백팩</ProductName>
+              <ProductPrice>₩89,000</ProductPrice>
+            </ProductCard>
+            <ProductCard>
+              <ProductImagePlaceholder />
+              <ProductName>클래식 워치</ProductName>
+              <ProductPrice>₩199,000</ProductPrice>
+            </ProductCard>
+          </ProductGrid>
+        </HeroSection>
+      </Main>
+
+      <Footer>
+        <p>&copy; 2026 My Store. All rights reserved.</p>
+      </Footer>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+`
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`
+
+const Logo = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const Nav = styled.nav`
+  display: flex;
+  gap: 1rem;
+`
+
+const ButtonBase = styled.button`
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+`
+
+const LoginButton = styled(ButtonBase)`
+  background-color: #2563eb;
+  color: white;
+  border: none;
+
+  &:hover {
+    background-color: #1d4ed8;
+  }
+`
+
+const LogoutButton = styled(ButtonBase)`
+  background-color: white;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+
+  &:hover {
+    background-color: #fef2f2;
+  }
+`
+
+const Main = styled.main`
+  flex: 1;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+`
+
+const HeroSection = styled.section`
+  text-align: center;
+`
+
+const Title = styled.h1`
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`
+
+const Subtitle = styled.p`
+  font-size: 1.25rem;
+  color: #64748b;
+  margin-bottom: 3rem;
+`
+
+const ProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+`
+
+const ProductCard = styled.div`
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+`
+
+const ProductImagePlaceholder = styled.div`
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+`
+
+const ProductName = styled.h3`
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+`
+
+const ProductPrice = styled.p`
+  font-weight: 700;
+  color: #2563eb;
+`
+
+const Footer = styled.footer`
+  padding: 2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  border-top: 1px solid #e2e8f0;
+`
