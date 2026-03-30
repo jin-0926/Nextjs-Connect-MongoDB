@@ -66,7 +66,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center gap-4 text-center">
             <p className="text-sm font-medium text-gray-500">아직 계정이 없으신가요?</p>
             <Link href="/signup" className="group flex items-center gap-2 text-sm font-semibold text-gray-900">
-              커뮤니티에 가입하기
+              회원가입
               <UserPlus size={16} className="text-gray-400 transition-colors group-hover:text-gray-900" />
             </Link>
           </div>

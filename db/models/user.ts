@@ -3,10 +3,11 @@ import mongoose from 'mongoose'
 
 const UserSchema = new mongoose.Schema(
   {
-    email: { type: String, default: '' },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     nickname: { type: String, default: '' },
     profile_image_url: { type: String, default: '' },
-    user_type: { type: String, default: '' },
+    user_type: { type: String, default: 'user' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },
