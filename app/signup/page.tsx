@@ -11,6 +11,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [userType, setUserType] = useState('user') // 'user' or 'seller'
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -26,7 +27,7 @@ export default function SignupPage() {
       const response = await fetch('/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, userType }),
       })
 
       const data = await response.json()
@@ -54,6 +55,28 @@ export default function SignupPage() {
         </div>
 
         <form onSubmit={handleSignup} className="space-y-6">
+          {/* 역할 선택 */}
+          <div className="mb-6 flex rounded-xl bg-gray-100 p-1">
+            <button
+              type="button"
+              onClick={() => setUserType('user')}
+              className={`flex-1 rounded-lg py-2 text-sm font-semibold transition ${
+                userType === 'user' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              구매자
+            </button>
+            <button
+              type="button"
+              onClick={() => setUserType('seller')}
+              className={`flex-1 rounded-lg py-2 text-sm font-semibold transition ${
+                userType === 'seller' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              판매자
+            </button>
+          </div>
+
           <div className="space-y-2">
             <label className="ml-1 text-xs font-semibold uppercase tracking-wider text-gray-400">사용자 이름</label>
             <div className="relative">

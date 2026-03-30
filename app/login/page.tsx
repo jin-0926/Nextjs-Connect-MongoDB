@@ -2,16 +2,46 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Mail, Lock, ArrowRight, UserPlus } from 'lucide-react'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    alert('로그인 시도: ' + email)
-    // 실제 API 연결은 추후 진행합니다
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        alert(`${data.user.nickname}님, 환영합니다! (${data.user.userType === 'seller' ? '판매자' : '구매자'})`)
+
+        // 역할에 따른 페이지 이동
+        if (data.user.userType === 'seller') {
+          router.push('/seller')
+        } else {
+          router.push('/')
+        }
+      } else {
+        alert(data.message || '로그인에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      alert('서버와 통신하는 중 오류가 발생했습니다.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -55,10 +85,11 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-3.5 font-medium text-white shadow-lg shadow-gray-200 transition hover:bg-gray-800"
+            disabled={isLoading}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-3.5 font-medium text-white shadow-lg shadow-gray-200 transition hover:bg-gray-800 disabled:opacity-50"
           >
-            로그인하기
-            <ArrowRight size={16} />
+            {isLoading ? '로그인 중...' : '로그인하기'}
+            {!isLoading && <ArrowRight size={16} />}
           </button>
         </form>
 

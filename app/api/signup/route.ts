@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs'
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json()
+    const { name, email, password, userType } = await req.json()
 
     // 1. DB 연결
     await dbConnect()
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       nickname: name,
       email,
       password: hashedPassword,
-      user_type: 'user',
+      user_type: userType || 'user',
     })
 
     await newUser.save()
