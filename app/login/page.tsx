@@ -11,6 +11,18 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
+  React.useEffect(() => {
+    // 이미 로그인된 상태인지 확인
+    const checkUser = async () => {
+      const res = await fetch('/api/auth/me')
+      const data = await res.json()
+      if (data.loggedIn) {
+        router.push('/')
+      }
+    }
+    checkUser()
+  }, [router])
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -26,6 +38,9 @@ export default function LoginPage() {
 
       if (data.success) {
         alert(`${data.user.nickname}님, 환영합니다! (${data.user.userType === 'seller' ? '판매자' : '구매자'})`)
+
+        // 세션 정보가 업데이트되었음을 알리기 위해 새로고침
+        router.refresh()
 
         // 역할에 따른 페이지 이동
         if (data.user.userType === 'seller') {
