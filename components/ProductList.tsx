@@ -1,41 +1,47 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-// import { Plus } from 'lucide-react'
 
-const MOCK_PRODUCTS = [
-  {
-    id: 1,
-    name: 'Luxury Sapphire Watch',
-    price: '₩1,200,000',
-    image: '/images/watch.png',
-    category: 'Watch',
-  },
-  {
-    id: 2,
-    name: 'Minimalist Urban Backpack',
-    price: '₩180,000',
-    image: '/images/hero.png',
-    category: 'Accessory',
-  },
-  {
-    id: 3,
-    name: 'Wireless Noise-Canceling Headphones',
-    price: '₩450,000',
-    image: '/images/watch.png',
-    category: 'Audio',
-  },
-  {
-    id: 4,
-    name: 'Premium Leather Wallet',
-    price: '₩120,000',
-    image: '/images/hero.png',
-    category: 'Accessory',
-  },
-]
+interface IGoods {
+  _id: string
+  name: string
+  price: number
+  description: string
+  category: string
+  imageUrl: string
+  stock: number
+}
 
 export default function ProductList() {
+  const [goodsList, setGoodsList] = useState<IGoods[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchGoods = async () => {
+      try {
+        const response = await fetch('/api/goods')
+        const data = await response.json()
+        if (data.success) {
+          setGoodsList(data.goodsList)
+        }
+      } catch (error) {
+        console.error('Fetch goods error:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchGoods()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className="mx-auto max-w-7xl px-6 py-20">
+        <p className="text-center text-gray-500">상품을 불러오는 중입니다...</p>
+      </section>
+    )
+  }
+
   return (
     <section className="mx-auto max-w-7xl px-6 py-20">
       <div className="mb-12 flex items-end justify-between">
@@ -46,28 +52,36 @@ export default function ProductList() {
       </div>
 
       <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-        {MOCK_PRODUCTS.map((product) => (
-          <div key={product.id} className="group relative flex flex-col">
-            <div className="flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-2xl bg-gray-100 transition-transform duration-300 group-hover:scale-[1.02]">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={500}
-                height={667}
-                className="h-full w-full object-cover"
-              />
-              {/* <button className="translate-y-4 rounded-full bg-white p-3 text-gray-900 opacity-0 shadow-lg transition-opacity duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                <Plus size={20} />
-              </button> */}
-            </div>
+        {goodsList.length > 0 ? (
+          goodsList.map((goods) => (
+            <div key={goods._id} className="group relative flex flex-col">
+              <div className="flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-2xl bg-gray-100 transition-transform duration-300 group-hover:scale-[1.02]">
+                {goods.imageUrl ? (
+                  <Image
+                    src={goods.imageUrl}
+                    alt={goods.name}
+                    width={500}
+                    height={667}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-gray-300">No Image</div>
+                )}
+              </div>
 
-            <div className="mt-6 flex flex-col gap-1">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">{product.category}</p>
-              <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
-              <p className="mt-1 text-xl font-bold text-gray-900">{product.price}</p>
+              <div className="mt-6 flex flex-col gap-1">
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">{goods.category}</p>
+                <h3 className="text-lg font-medium text-gray-900">{goods.name}</h3>
+                <p className="mt-1 text-xl font-bold text-gray-900">₩{goods.price.toLocaleString()}</p>
+                <p className="text-sm text-gray-500">재고: {goods.stock}개</p>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="col-span-full py-20 text-center">
+            <p className="text-gray-400">등록된 상품이 없습니다.</p>
           </div>
-        ))}
+        )}
       </div>
     </section>
   )

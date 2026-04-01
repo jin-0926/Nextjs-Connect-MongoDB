@@ -72,9 +72,12 @@ export default function SellerPage() {
           <div className="text-center">
             <Package size={48} className="mx-auto mb-4 text-gray-200" />
             <p className="font-medium text-gray-400">아직 등록된 상품이 없습니다.</p>
-            <button className="mt-4 rounded-xl bg-gray-900 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800">
+            <Link
+              href="/seller/add"
+              className="mt-4 inline-flex items-center justify-center rounded-xl bg-gray-900 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800 focus:outline-none"
+            >
               새 상품 등록하기
-            </button>
+            </Link>
           </div>
         </div>
       </main>
