@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { Plus } from 'lucide-react'
+// import { Plus } from 'lucide-react'
 
 const MOCK_PRODUCTS = [
   {
@@ -56,9 +56,9 @@ export default function ProductList() {
                 height={667}
                 className="h-full w-full object-cover"
               />
-              <button className="translate-y-4 rounded-full bg-white p-3 text-gray-900 opacity-0 shadow-lg transition-opacity duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+              {/* <button className="translate-y-4 rounded-full bg-white p-3 text-gray-900 opacity-0 shadow-lg transition-opacity duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                 <Plus size={20} />
-              </button>
+              </button> */}
             </div>
 
             <div className="mt-6 flex flex-col gap-1">
