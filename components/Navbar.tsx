@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { User, ShoppingCart, LogOut } from 'lucide-react'
+import { User, ShoppingCart, LogOut, LayoutDashboard } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 interface UserInfo {
+  id: string // id 추가
   nickname: string
   email: string
   userType: string
@@ -61,6 +62,15 @@ export default function Navbar() {
 
         {user ? (
           <div className="flex items-center gap-4">
+            {user.userType === 'seller' && (
+              <Link
+                href="/seller"
+                className="flex items-center gap-2 rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-gray-800"
+              >
+                <LayoutDashboard size={14} />
+                판매자 센터
+              </Link>
+            )}
             <span className="text-sm font-medium text-gray-700">{user.nickname}님</span>
             <button
               onClick={handleLogout}
