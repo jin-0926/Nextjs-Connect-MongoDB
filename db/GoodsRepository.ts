@@ -50,4 +50,18 @@ export class GoodsRepository {
       throw new Error('상품 정보를 불러오는 중 오류가 발생했습니다.')
     }
   }
+
+  /**
+   * 특정 판매자의 상품 목록을 가져옵니다.
+   */
+  static async getGoodsBySellerId(sellerId: string) {
+    try {
+      await dbConnect()
+      const goodsList = await Goods.find({ sellerId }).sort({ createdAt: -1 })
+      return { success: true, goodsList }
+    } catch (error) {
+      console.error('GoodsRepository Fetch by Seller Error:', error)
+      throw new Error('판매자 상품 정보를 불러오는데 실패했습니다.')
+    }
+  }
 }
