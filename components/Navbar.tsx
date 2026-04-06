@@ -56,9 +56,9 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="rounded-full p-2 transition hover:bg-gray-100">
+        <Link href="/cart" className="rounded-full p-2 transition hover:bg-gray-100">
           <ShoppingCart size={20} className="text-gray-600" />
-        </button>
+        </Link>
 
         {user ? (
           <div className="flex items-center gap-4">

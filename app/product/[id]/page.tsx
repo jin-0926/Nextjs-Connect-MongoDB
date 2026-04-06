@@ -1,8 +1,10 @@
 import { GoodsRepository } from '@/db/GoodsRepository'
 import Navbar from '@/components/Navbar'
+import ProductActions from '@/components/ProductActions'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 interface PageProps {
   params: {
@@ -12,6 +14,8 @@ interface PageProps {
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { id } = params
+  const cookieStore = cookies()
+  const isLoggedIn = !!cookieStore.get('user_session')
 
   let goods
   try {
@@ -93,17 +97,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-              <button
-                className="flex-1 rounded-2xl bg-black px-8 py-5 text-center text-sm font-bold text-white transition-all hover:bg-gray-800 active:scale-[0.98] disabled:bg-gray-400"
-                disabled={goods.stock === 0}
-              >
-                장바구니에 담기
-              </button>
-              <button className="rounded-2xl border border-gray-200 bg-white px-8 py-5 text-sm font-bold text-gray-900 transition-all hover:border-black hover:bg-black hover:text-white active:scale-[0.98]">
-                장바구니
-              </button>
-            </div>
+            {/* Product Buttons Component */}
+            <ProductActions productId={goods._id} isLoggedIn={isLoggedIn} stock={goods.stock} />
           </div>
         </div>
       </main>
