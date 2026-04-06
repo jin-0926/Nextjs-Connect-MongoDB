@@ -75,4 +75,18 @@ export class CartRepository {
       throw new Error('장바구니 아이템 삭제에 실패했습니다.')
     }
   }
+
+  /**
+   * 사용자의 장바구니 전체를 비웁니다.
+   */
+  static async clearCart(userId: string) {
+    try {
+      await dbConnect()
+      await Cart.deleteMany({ userId })
+      return { success: true }
+    } catch (error) {
+      console.error('CartRepository Clear Error:', error)
+      throw new Error('장바구니 비우기에 실패했습니다.')
+    }
+  }
 }

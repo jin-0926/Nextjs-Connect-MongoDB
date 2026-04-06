@@ -79,6 +79,32 @@ export default function CartPage() {
 
   const totalPrice = items.reduce((acc, item) => acc + item.productId.price * item.quantity, 0)
   const shippingFee: number = 0 // 무료 배송 설정 시
+  const [isFinishing, setIsFinishing] = useState(false)
+
+  const handleCheckout = async () => {
+    if (items.length === 0) return
+    if (!confirm('정말로 결제하시겠습니까?')) return
+
+    try {
+      setIsFinishing(true)
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+      })
+      const data = await response.json()
+
+      if (data.success) {
+        alert(data.message)
+        setItems([]) // 장바구니 비우기
+      } else {
+        alert(data.message || '결제 중 오류가 발생했습니다.')
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('결제 처리 중 서버 오류가 발생했습니다.')
+    } finally {
+      setIsFinishing(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -200,9 +226,13 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <button className="group mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-5 font-bold text-white transition-all hover:bg-gray-800 active:scale-[0.98]">
-                  결제하기
-                  <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                <button
+                  onClick={handleCheckout}
+                  disabled={isFinishing}
+                  className="group mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-5 font-bold text-white transition-all hover:bg-gray-800 active:scale-[0.98] disabled:bg-gray-400"
+                >
+                  {isFinishing ? '처리 중...' : '결제하기'}
+                  {!isFinishing && <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />}
                 </button>
               </div>
             </div>

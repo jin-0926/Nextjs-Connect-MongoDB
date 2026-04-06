@@ -78,4 +78,23 @@ export class GoodsRepository {
       throw new Error('상품 정보를 불러오는데 실패했습니다.')
     }
   }
+
+  /**
+   * 상품의 재고를 감소시킵니다.
+   */
+  static async decreaseStock(id: string, amount: number) {
+    try {
+      await dbConnect()
+      const goods = await Goods.findById(id)
+      if (!goods) throw new Error('상품을 찾을 수 없습니다.')
+      if (goods.stock < amount) throw new Error('재고가 부족합니다.')
+
+      goods.stock -= amount
+      await goods.save()
+      return { success: true, goods }
+    } catch (error) {
+      console.error('GoodsRepository Decrease Stock Error:', error)
+      throw new Error('재고 수정 중 오류가 발생했습니다.')
+    }
+  }
 }
