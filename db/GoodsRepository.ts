@@ -64,4 +64,18 @@ export class GoodsRepository {
       throw new Error('판매자 상품 정보를 불러오는데 실패했습니다.')
     }
   }
+
+  /**
+   * 특정 상품(Goods) 정보를 ID로 가져옵니다.
+   */
+  static async getGoodsById(id: string) {
+    try {
+      await dbConnect()
+      const goods = await Goods.findById(id)
+      return { success: true, goods }
+    } catch (error) {
+      console.error('GoodsRepository Fetch by ID Error:', error)
+      throw new Error('상품 정보를 불러오는데 실패했습니다.')
+    }
+  }
 }

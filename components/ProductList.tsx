@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface IGoods {
   _id: string
@@ -54,7 +55,7 @@ export default function ProductList() {
       <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
         {goodsList.length > 0 ? (
           goodsList.map((goods) => (
-            <div key={goods._id} className="group relative flex flex-col">
+            <Link key={goods._id} href={`/product/${goods._id}`} className="group relative flex flex-col pt-4">
               <div className="flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-2xl bg-gray-100 transition-transform duration-300 group-hover:scale-[1.02]">
                 {goods.imageUrl ? (
                   <Image
@@ -69,13 +70,20 @@ export default function ProductList() {
                 )}
               </div>
 
-              <div className="mt-6 flex flex-col gap-1">
+              <div className="mt-6 flex flex-col gap-1 px-2">
                 <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">{goods.category}</p>
-                <h3 className="text-lg font-medium text-gray-900">{goods.name}</h3>
+                <h3 className="text-lg font-medium text-gray-900 duration-300 group-hover:translate-x-1 group-hover:text-black">
+                  {goods.name}
+                </h3>
                 <p className="mt-1 text-xl font-bold text-gray-900">₩{goods.price.toLocaleString()}</p>
-                <p className="text-sm text-gray-500">재고: {goods.stock}개</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="text-sm text-gray-500 underline underline-offset-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    VIEW DETAILS
+                  </p>
+                  <p className="text-xs font-medium text-gray-400">Stock: {goods.stock}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           ))
         ) : (
           <div className="col-span-full py-20 text-center">
