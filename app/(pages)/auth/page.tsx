@@ -4,9 +4,9 @@ import { useState, Suspense } from 'react'
 import styled from 'styled-components'
 import SignUp from './Signup'
 import ForgetPassword from './ForgetPass'
-import { Gaitwise } from '@/public/svg'
+// import { Gaitwise } from '@/public/svg'
 import Image from 'next/image'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 function AuthContent() {
   const searchParams = useSearchParams() // URLのクエリパラメータを取得
@@ -15,9 +15,10 @@ function AuthContent() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('analyst')
+  const router = useRouter()
 
   const handleLogin = async () => {
-    const res = await fetch('/api/login', {
+    const res = await fetch('/api/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -27,6 +28,7 @@ function AuthContent() {
 
     if (res.ok) {
       alert('ログイン成功')
+      router.push('/')
     } else {
       alert('ログイン失敗')
     }
@@ -36,7 +38,7 @@ function AuthContent() {
     <Container>
       {type === 'login' && (
         <LoginBox>
-          <Image src={Gaitwise} alt="logo" width={100} height={100} layout="responsive" />
+          {/* <Image src={Gaitwise} alt="logo" width={100} height={100} layout="responsive" /> */}
           <Title>Hi, Welcome Back!</Title>
           <Subtitle>Please select a Type</Subtitle>
 
