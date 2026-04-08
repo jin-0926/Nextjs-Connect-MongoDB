@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { ArrowLeft, Plus } from 'lucide-react'
+
+import { Plus } from 'lucide-react'
 
 export default function AddGoodsPage() {
   const router = useRouter()
@@ -51,14 +51,6 @@ export default function AddGoodsPage() {
   return (
     <div className="min-h-screen bg-gray-50 px-6 py-12">
       <div className="mx-auto max-w-2xl">
-        <Link
-          href="/seller"
-          className="mb-8 flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-gray-900"
-        >
-          <ArrowLeft size={16} />
-          판매자 센터로 돌아가기
-        </Link>
-
         <div className="rounded-3xl border bg-white p-8 shadow-sm sm:p-12">
           <div className="mb-10 text-center">
             <h1 className="text-2xl font-bold text-gray-900">새 상품 등록</h1>

@@ -1,3 +1,7 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import styled from 'styled-components'
 import Navbar from '../components/Navbar'
 import ProductList from '../components/ProductList'
 
