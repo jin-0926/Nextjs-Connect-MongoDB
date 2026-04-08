@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
 import styled from 'styled-components'
+import Navbar from '../components/Navbar'
+import ProductList from '../components/ProductList'
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -23,57 +23,30 @@ export default function Home() {
   }
 
   return (
-    <Container>
-      <Header>
-        <Logo>
-          <Image
-            src="https://nextjs.org/icons/next.svg"
-            alt="Next.js logo"
-            width={120}
-            height={30}
-            priority
-          />
-        </Logo>
-        <Nav>
-          {isLoggedIn ? (
-            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
-          ) : (
-            <Link href="/auth?type=login" passHref>
-              <LoginButton>로그인</LoginButton>
-            </Link>
-          )}
-        </Nav>
-      </Header>
+    <main className="min-h-screen bg-[#fafafa]">
+      <Navbar />
 
-      <Main>
-        <HeroSection>
-          <Title>Welcome to My Store</Title>
-          <Subtitle>발견하고, 탐험하고, 쇼핑하세요.</Subtitle>
-          <ProductGrid>
-            {/* 상품 정보가 들어갈 자리 */}
-            <ProductCard>
-              <ProductImagePlaceholder />
-              <ProductName>프리미엄 슈즈</ProductName>
-              <ProductPrice>₩129,000</ProductPrice>
-            </ProductCard>
-            <ProductCard>
-              <ProductImagePlaceholder />
-              <ProductName>모던 백팩</ProductName>
-              <ProductPrice>₩89,000</ProductPrice>
-            </ProductCard>
-            <ProductCard>
-              <ProductImagePlaceholder />
-              <ProductName>클래식 워치</ProductName>
-              <ProductPrice>₩199,000</ProductPrice>
-            </ProductCard>
-          </ProductGrid>
-        </HeroSection>
-      </Main>
+      <div className="pt-20">
+        <ProductList />
+      </div>
 
-      <Footer>
-        <p>&copy; 2026 My Store. All rights reserved.</p>
-      </Footer>
-    </Container>
+      <footer className="border-t bg-white px-6 py-12">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 md:flex-row">
+          <p className="text-sm text-gray-500">© 2026 LUXE SHOP. All rights reserved.</p>
+          <div className="flex gap-8">
+            <a href="#" className="font-medium text-gray-400 transition hover:text-gray-900">
+              Terms
+            </a>
+            <a href="#" className="font-medium text-gray-400 transition hover:text-gray-900">
+              Privacy
+            </a>
+            <a href="#" className="font-medium text-gray-400 transition hover:text-gray-900">
+              Contact
+            </a>
+          </div>
+        </div>
+      </footer>
+    </main>
   )
 }
 
