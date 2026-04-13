@@ -42,6 +42,7 @@ export class GoodsRepository {
    */
   static async getAllGoods() {
     try {
+      await dbConnect()
       // 재고가 0보다 큰 상품만 반환하도록 필터링 추가
       const goodsList = await Goods.find({ stock: { $gt: 0 } }).sort({ createdAt: -1 })
       return { success: true, goodsList }
