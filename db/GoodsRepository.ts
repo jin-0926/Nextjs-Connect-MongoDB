@@ -116,4 +116,23 @@ export class GoodsRepository {
       throw error
     }
   }
+
+  /**
+   * 상품(Goods) 정보를 업데이트합니다.
+   */
+  static async updateGoods(id: string, sellerId: string, updateData: Partial<CreateGoodsData>) {
+    try {
+      await dbConnect()
+      // sellerId를 함께 체크하여 본인 상품만 수정 가능하도록 함
+      const updatedGoods = await Goods.findOneAndUpdate({ _id: id, sellerId }, { $set: updateData }, { new: true })
+
+      if (!updatedGoods) {
+        throw new Error('상품을 찾을 수 없거나 수정 권한이 없습니다.')
+      }
+      return { success: true, goods: updatedGoods }
+    } catch (error) {
+      console.error('GoodsRepository Update Error:', error)
+      throw error
+    }
+  }
 }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Package, Plus, Trash2 } from 'lucide-react'
+import { Package, Plus, Trash2, Edit2 } from 'lucide-react'
 import Image from 'next/image'
 
 interface IGoods {
@@ -134,13 +134,22 @@ export default function SellerPage() {
                       </span>
                     </td>
                     <td className="py-4 text-right">
-                      <button
-                        onClick={() => handleDelete(goods._id)}
-                        className="text-gray-400 transition-colors hover:text-red-500"
-                        title="상품 삭제"
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      <div className="flex justify-end gap-3">
+                        <Link
+                          href={`/seller/edit/${goods._id}`}
+                          className="text-gray-400 transition-colors hover:text-blue-500"
+                          title="상품 수정"
+                        >
+                          <Edit2 size={18} />
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(goods._id)}
+                          className="text-gray-400 transition-colors hover:text-red-500"
+                          title="상품 삭제"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
