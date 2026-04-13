@@ -26,4 +26,20 @@ export class OrderRepository {
     await dbConnect()
     return await Order.findByIdAndUpdate(orderId, { status }, { new: true })
   }
+
+  static async createOrder(orderData: {
+    buyerId: string
+    orderItems: Array<{
+      productId: string
+      quantity: number
+      price: number
+    }>
+    totalAmount: number
+    shippingAddress: string
+    contact: string
+    receiver: string
+  }) {
+    await dbConnect()
+    return await Order.create(orderData)
+  }
 }

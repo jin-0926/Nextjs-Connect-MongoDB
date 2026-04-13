@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Package, Plus } from 'lucide-react'
+import { Package, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 
 interface IGoods {
@@ -34,6 +34,26 @@ export default function SellerPage() {
     }
     fetchSellerGoods()
   }, [])
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('정말로 이 상품을 삭제하시겠습니까?')) return
+
+    try {
+      const response = await fetch(`/api/seller/goods/${id}`, {
+        method: 'DELETE',
+      })
+      const data = await response.json()
+      if (data.success) {
+        setGoodsList(goodsList.filter((g) => g._id !== id))
+        alert('상품이 삭제되었습니다.')
+      } else {
+        alert(data.message || '삭제에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('Delete goods error:', error)
+      alert('오류가 발생했습니다.')
+    }
+  }
 
   return (
     <div className="p-10">
@@ -82,6 +102,7 @@ export default function SellerPage() {
                   <th className="pb-4 pr-6">가격</th>
                   <th className="pb-4">재고</th>
                   <th className="pb-4">상태</th>
+                  <th className="pb-4 text-right">관리</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -111,6 +132,15 @@ export default function SellerPage() {
                       <span className="inline-flex rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-600">
                         판매 중
                       </span>
+                    </td>
+                    <td className="py-4 text-right">
+                      <button
+                        onClick={() => handleDelete(goods._id)}
+                        className="text-gray-400 transition-colors hover:text-red-500"
+                        title="상품 삭제"
+                      >
+                        <Trash2 size={18} />
+                      </button>
                     </td>
                   </tr>
                 ))}
