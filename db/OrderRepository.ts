@@ -15,7 +15,7 @@ export class OrderRepository {
     const orders = await Order.find({
       'orderItems.productId': { $in: goodsIds },
     })
-      .populate('buyerId', 'name email') // 구매자 정보 포함
+      .populate('buyerId', 'nickname email') // 구매자 정보 포함
       .populate('orderItems.productId') // 상품 정보 포함
       .sort({ createdAt: -1 }) // 최신순
 

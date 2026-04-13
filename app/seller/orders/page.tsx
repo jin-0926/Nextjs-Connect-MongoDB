@@ -16,7 +16,7 @@ interface OrderItem {
 interface Order {
   _id: string
   buyerId: {
-    name: string
+    nickname: string
     email: string
   }
   orderItems: OrderItem[]
@@ -116,7 +116,7 @@ export default function SellerOrdersPage() {
                       <div className="mt-1 font-mono text-xs text-gray-400">{order._id.substring(0, 8)}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{order.buyerId?.name || '익명'}</div>
+                      <div className="text-sm font-medium text-gray-900">{order.buyerId?.nickname || '익명'}</div>
                       <div className="text-xs text-gray-500">{order.buyerId?.email}</div>
                     </td>
                     <td className="px-6 py-4">
