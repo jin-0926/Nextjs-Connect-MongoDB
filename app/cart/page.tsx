@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface CartItem {
   _id: string
@@ -21,6 +22,7 @@ interface CartItem {
 export default function CartPage() {
   const [items, setItems] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   const fetchCartItems = async () => {
     try {
@@ -93,8 +95,8 @@ export default function CartPage() {
       const data = await response.json()
 
       if (data.success) {
-        alert(data.message)
         setItems([]) // 장바구니 비우기
+        router.push(`/orders/${data.orderId}`)
       } else {
         alert(data.message || '결제 중 오류가 발생했습니다.')
       }

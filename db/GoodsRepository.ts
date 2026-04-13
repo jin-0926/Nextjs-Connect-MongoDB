@@ -43,7 +43,8 @@ export class GoodsRepository {
   static async getAllGoods() {
     try {
       await dbConnect()
-      const goodsList = await Goods.find({}).sort({ createdAt: -1 })
+      // 재고가 0보다 큰 상품만 반환하도록 필터링 추가
+      const goodsList = await Goods.find({ stock: { $gt: 0 } }).sort({ createdAt: -1 })
       return { success: true, goodsList }
     } catch (error) {
       console.error('GoodsRepository Fetch Error:', error)
@@ -95,6 +96,43 @@ export class GoodsRepository {
     } catch (error) {
       console.error('GoodsRepository Decrease Stock Error:', error)
       throw new Error('재고 수정 중 오류가 발생했습니다.')
+    }
+  }
+
+  /**
+   * 상품(Goods)을 삭제합니다.
+   */
+  static async deleteGoods(id: string, sellerId: string) {
+    try {
+      await dbConnect()
+      // sellerId를 함께 체크하여 본인 상품만 삭제 가능하도록 함
+      const result = await Goods.deleteOne({ _id: id, sellerId })
+      if (result.deletedCount === 0) {
+        throw new Error('상품을 찾을 수 없거나 삭제 권한이 없습니다.')
+      }
+      return { success: true }
+    } catch (error) {
+      console.error('GoodsRepository Delete Error:', error)
+      throw error
+    }
+  }
+
+  /**
+   * 상품(Goods) 정보를 업데이트합니다.
+   */
+  static async updateGoods(id: string, sellerId: string, updateData: Partial<CreateGoodsData>) {
+    try {
+      await dbConnect()
+      // sellerId를 함께 체크하여 본인 상품만 수정 가능하도록 함
+      const updatedGoods = await Goods.findOneAndUpdate({ _id: id, sellerId }, { $set: updateData }, { new: true })
+
+      if (!updatedGoods) {
+        throw new Error('상품을 찾을 수 없거나 수정 권한이 없습니다.')
+      }
+      return { success: true, goods: updatedGoods }
+    } catch (error) {
+      console.error('GoodsRepository Update Error:', error)
+      throw error
     }
   }
 }

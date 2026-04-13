@@ -23,13 +23,16 @@ async function dbConnect(): Promise<mongoose.Connection> {
     const opts = {
       bufferCommands: false,
     }
+    console.log('MongoDB 연결 시도 중...')
     cached.promise = mongoose.connect(process.env.MONGODB_URI as string, opts).then((mongoose) => {
+      console.log('MongoDB 연결 성공!')
       return mongoose.connection
     })
   }
   try {
     cached.conn = await cached.promise
   } catch (e) {
+    console.error('MongoDB 연결 실패:', e)
     cached.promise = null
     throw e
   }

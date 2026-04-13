@@ -37,7 +37,7 @@ export class CartRepository {
       await dbConnect()
       // .populate('productId')를 통해 해당 상품의 상세 정보(이름, 가격 등)도 함께 가져옵니다.
       const items = await Cart.find({ userId })
-        .populate('productId', '_id name price imageUrl category')
+        .populate('productId', '_id name price imageUrl category sellerId')
         .sort({ createdAt: -1 })
       return { success: true, items }
     } catch (error) {
