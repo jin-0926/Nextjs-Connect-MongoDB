@@ -3,6 +3,32 @@ import dbConnect from './dbConnect'
 import Order from './models/order'
 import Goods from './models/goods'
 
+export interface IOrderDetail {
+  _id: string
+  buyerId: {
+    _id: string
+    nickname: string
+    email: string
+  }
+  orderItems: Array<{
+    productId: {
+      _id: string
+      name: string
+      price: number
+      imageUrl: string
+      category: string
+    }
+    quantity: number
+    price: number
+  }>
+  totalAmount: number
+  status: string
+  shippingAddress: string
+  contact: string
+  receiver: string
+  createdAt: string
+}
+
 export class OrderRepository {
   static async getOrdersBySellerId(sellerId: string) {
     await dbConnect()
@@ -25,6 +51,14 @@ export class OrderRepository {
   static async updateOrderStatus(orderId: string, status: string) {
     await dbConnect()
     return await Order.findByIdAndUpdate(orderId, { status }, { new: true })
+  }
+
+  static async getOrderById(orderId: string): Promise<IOrderDetail | null> {
+    await dbConnect()
+    return (await Order.findById(orderId)
+      .populate('buyerId', 'nickname email')
+      .populate('orderItems.productId')
+      .lean()) as IOrderDetail | null
   }
 
   static async createOrder(orderData: {

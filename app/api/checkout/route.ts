@@ -75,7 +75,7 @@ export async function POST() {
     }
 
     // 3. 주문 내역 생성
-    await OrderRepository.createOrder({
+    const newOrder = await OrderRepository.createOrder({
       buyerId: user.id,
       orderItems,
       totalAmount,
@@ -91,6 +91,7 @@ export async function POST() {
       {
         success: true,
         message: '결제가 완료되었습니다. 주문해주셔서 감사합니다!',
+        orderId: newOrder._id,
       },
       { status: 200 }
     )
