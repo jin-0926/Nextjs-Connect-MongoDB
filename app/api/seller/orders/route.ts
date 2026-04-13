@@ -16,10 +16,14 @@ export async function GET() {
     // if (userData.role !== 'seller') { ... }
 
     const orders = await OrderRepository.getOrdersBySellerId(userData.id)
-
     return NextResponse.json(orders, { status: 200 })
   } catch (error) {
-    console.error('Seller orders API error:', error)
+    const err = error as Error
+    console.error('Seller orders API error details:', {
+      message: err.message,
+      stack: err.stack,
+      error: err,
+    })
     return NextResponse.json({ error: '주문 목록을 가져오는데 실패했습니다.' }, { status: 500 })
   }
 }
