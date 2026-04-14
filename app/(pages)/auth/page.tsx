@@ -4,8 +4,6 @@ import { useState, Suspense } from 'react'
 import styled from 'styled-components'
 import SignUp from './Signup'
 import ForgetPassword from './ForgetPass'
-// import { Gaitwise } from '@/public/svg'
-import Image from 'next/image'
 import { useSearchParams, useRouter } from 'next/navigation'
 
 function AuthContent() {
