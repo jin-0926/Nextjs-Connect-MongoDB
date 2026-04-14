@@ -1,7 +1,5 @@
 'use client'
 
-import { Gaitwise } from '@/public/svg'
-import Image from 'next/image'
 import { useState } from 'react'
 import styled from 'styled-components'
 
@@ -29,7 +27,7 @@ export default function SignUp() {
 
   return (
     <SignUpBox>
-      <Image src={Gaitwise} alt="logo" width={100} height={100} layout="responsive" />
+      {/* <Image src={Gaitwise} alt="logo" width={100} height={100} layout="responsive" /> */}
       <Title>Create Account</Title>
       <Subtitle>Doctor must authenticate after Login</Subtitle>
 

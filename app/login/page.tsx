@@ -1,0 +1,123 @@
+'use client'
+
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Mail, Lock, ArrowRight, UserPlus } from 'lucide-react'
+
+export default function LoginPage() {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  React.useEffect(() => {
+    // 이미 로그인된 상태인지 확인
+    const checkUser = async () => {
+      const res = await fetch('/api/auth/me')
+      const data = await res.json()
+      if (data.loggedIn) {
+        router.push('/')
+      }
+    }
+    checkUser()
+  }, [router])
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        alert(`${data.user.nickname}님, 환영합니다! (${data.user.userType === 'seller' ? '판매자' : '구매자'})`)
+
+        // 세션 정보가 업데이트되었음을 알리기 위해 새로고침
+        router.refresh()
+
+        // 역할에 따른 페이지 이동
+        if (data.user.userType === 'seller') {
+          router.push('/seller')
+        } else {
+          router.push('/')
+        }
+      } else {
+        alert(data.message || '로그인에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      alert('서버와 통신하는 중 오류가 발생했습니다.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#fafafa] px-6 py-12">
+      <div className="w-full max-w-md rounded-3xl border bg-white p-8 shadow-sm sm:p-12">
+        <div className="mb-10 flex flex-col items-center text-center">
+          <h1 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">LUXE SHOP LOGIN</h1>
+          <p className="text-sm text-gray-500">당신만의 특별한 경험을 다시 시작하세요</p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <label className="ml-1 text-xs font-semibold uppercase tracking-wider text-gray-400">이메일 주소</label>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <input
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 outline-none transition focus:border-gray-900 focus:ring-0"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="ml-1 text-xs font-semibold uppercase tracking-wider text-gray-400">비밀번호</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 outline-none transition focus:border-gray-900 focus:ring-0"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-900 py-3.5 font-medium text-white shadow-lg shadow-gray-200 transition hover:bg-gray-800 disabled:opacity-50"
+          >
+            {isLoading ? '로그인 중...' : '로그인하기'}
+            {!isLoading && <ArrowRight size={16} />}
+          </button>
+        </form>
+
+        <div className="mt-12 border-t border-gray-100 pt-8">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <p className="text-sm font-medium text-gray-500">아직 계정이 없으신가요?</p>
+            <Link href="/signup" className="group flex items-center gap-2 text-sm font-semibold text-gray-900">
+              회원가입
+              <UserPlus size={16} className="text-gray-400 transition-colors group-hover:text-gray-900" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </main>
+  )
+}
